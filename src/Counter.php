@@ -35,7 +35,7 @@ class Counter
     private function validation($credentialPath = null)
     {
         $response = ["code" => 400, "error" => "request paramater invalid."];
-        if (is_string($credentialPath)) {
+        if (isset($credentialPath) && !is_string($credentialPath)) {
             $response["messages"][] = "credential path is must be string";
         }
 
@@ -65,16 +65,11 @@ class Counter
             }
         }
 
-        if (!isset($_POST["end_day"])) {
-            $response["messages"][] = "end_day is need";
-        }
-
-
         if (isset($_POST["prefix_name"]) && is_string($_POST["prefix_name"])) {
             $response["messages"][] = "prefix_name shuld be string";
         }
 
-        if (count($response["messages"]) > 0) {
+        if (!isset($response["messages"])) {
             return 0;
         }
         echo json_encode($response, JSON_PRETTY_PRINT);
@@ -103,7 +98,7 @@ class Counter
                 $response["messages"][]
                     = "Env var: AC_SIGHNED_KEY  is need for auth";
             }
-            if (isset($response['messages']) && count($response["messages"]) > 1) {
+            if (isset($response['messages']) && count($response["messages"]) > 0) {
                 echo json_encode($response, JSON_PRETTY_PRINT);
                 exit;
             }
