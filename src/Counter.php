@@ -229,11 +229,11 @@ class Counter
         $header = $report->columnHeader;
         $metricHeaders = $header->metricHeader->getMetricHeaderEntries();
         $rows = $report->data->rows;
-        $responce = null;
+        $response = null;
         foreach ($rows as $k => $row) {
-            $responce = $this->getMetricsData($row, $metricHeaders);
+            $response = $this->getMetricsData($row, $metricHeaders);
         }
-        return $responce;
+        return empty($response) ? 0 : $response;
     }
 
     /**
