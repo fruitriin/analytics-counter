@@ -153,19 +153,14 @@ class Counter
 
         if (isset($_POST['days'])) {
             foreach ($_POST['days'] as $daysPair) {
-                $reports[] = $this->getReportCore($analyticsReporting,
-                    $daysPair['start'],
-                    $daysPair['end']);
+                $reports[] = $this->getReportCore($analyticsReporting, $daysPair['start'], $daysPair['end']);
             }
         } else {
             $startDay = key_exists('start_day', $_POST) ? $_POST["start_day"]
                 : date('Y-m-d', strtotime(analytics_launch_date));
-            $endDay = key_exists('end_day', $_POST) ? $_POST["end_day"]
-                : 'today';
-            $reports = $this->getReportCore($analyticsReporting, $startDay,
-                $endDay);
+            $endDay = key_exists('end_day', $_POST) ? $_POST["end_day"] : 'today';
+            $reports = $this->getReportCore($analyticsReporting, $startDay, $endDay);
         }
-
         $this->reports = $reports;
     }
 
@@ -209,18 +204,17 @@ class Counter
     {
         $reports = $this->reports;
 
-        if (is_array($reports)) {
-            $responce = [];
-            foreach ($reports as $report) {
+        $response = [];
+        foreach ($reports as $report) {
+            if (is_array($report)) {
                 foreach ($report as $r) {
-                    $responce[] = $this->printResultCore($r);
+                    $response[] = $this->printResultCore($r);
                 }
+            } else {
+                $response = $this->printResultCore($report);
             }
-            return $responce;
-        } else {
-            return $this->printResultCore($reports);
         }
-
+        return $response;
     }
 
     /**
